@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor de Unidades</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="container">
+    <h1>Conversor de Unidades</h1>
+    <div class="converter">
+        <div class="field">
+            <label for="category">Categoria:</label>
+            <select id="category" onchange="populateUnits()" title="Escolha a categoria de unidades (comprimento, volume, área)">
+                <option value="length">Comprimento</option>
+                <option value="volume">Volume</option>
+                <option value="area">Área</option>
+            </select>
+        </div>
+        <div class="field">
+            <label for="inputValue">Valor:</label>
+            <div class="input-wrapper">
+                <input type="number" id="inputValue" placeholder="Digite o valor" title="Digite o valor a ser convertido">
+                <select id="inputUnit" title="Escolha a unidade de origem"></select>
+            </div>
+        </div>
+        <div class="field">
+            <label for="outputUnit">Para:</label>
+            <select id="outputUnit" title="Escolha a unidade de destino"></select>
+        </div>
+        <div class="buttons">
+            <button onclick="convert()" title="Clique para converter">Converter</button>
+            <button onclick="reset()" title="Clique para reiniciar">Reiniciar</button>
+        </div>
+        <p id="result"></p>
+    </div>
+    <footer>
+        Criado por <span class="creator">@profadevairvitorio</span>
+    </footer>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
