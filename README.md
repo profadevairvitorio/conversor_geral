@@ -4,7 +4,7 @@ A simple and elegant unit converter application with a dark theme and responsive
 
 You can use the unit converter online by visiting [link](https://profadevairvitorio.github.io/conversor_geral/).
 
-![img.png](img.png)
+![img_1.png](img_1.png)
 ## Features
 
 - **Category Selection**: Choose between length, volume, and area units.
