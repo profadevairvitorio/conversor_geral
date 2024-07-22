@@ -23,39 +23,41 @@ concurrency:
 jobs:
   # Single deploy job since we're just deploying
   deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Check for changes in non-doc files
-        id: check_changes
-        run: |
-          changes=$(gh api repos/${{ github.repository }}/commits/${{ github.sha }} | jq -r '.files[].filename')
-          non_doc_changes=$(echo "$changes" | grep -vE '(^README.md$|^docs/)')
+      - name: Filter files
+        id: filter
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            docs:
+              - 'README.md'
+              - 'docs/**'
+            code:
+              - '**'
+              - '!README.md'
+              - '!docs/**'
 
-          if [ -n "$non_doc_changes" ]; then
-            echo "Changes detected in non-doc files."
-          else
-            echo "Only doc files changed, stopping job."
-            exit 0
-          fi
+      - name: Stop if only docs changed
+        if: steps.filter.outputs.code == 'false'
+        run: echo "Only doc files changed, stopping job." && exit 0
 
       - name: Setup Pages
-        if: success()  # Only run if the previous step did not exit
+        if: steps.filter.outputs.code == 'true'
         uses: actions/configure-pages@v5
 
       - name: Upload artifact
-        if: success()  # Only run if the previous step did not exit
+        if: steps.filter.outputs.code == 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           # Upload entire repository
           path: '.'
 
       - name: Deploy to GitHub Pages
-        if: success()  # Only run if the previous step did not exit
+        if: steps.filter.outputs.code == 'true'
         id: deployment
         uses: actions/deploy-pages@v4
