@@ -1,3 +1,4 @@
+# Simple workflow for deploying static content to GitHub Pages
 name: Deploy static content to Pages
 
 on:
@@ -23,41 +24,20 @@ concurrency:
 jobs:
   # Single deploy job since we're just deploying
   deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Filter files
-        id: filter
-        uses: dorny/paths-filter@v2
-        with:
-          filters: |
-            docs:
-              - 'README.md'
-              - 'docs/**'
-            code:
-              - '**'
-              - '!README.md'
-              - '!docs/**'
-
-      - name: Stop if only docs changed
-        if: steps.filter.outputs.code == 'false'
-        run: echo "Only doc files changed, stopping job." && exit 0
-
       - name: Setup Pages
-        if: steps.filter.outputs.code == 'true'
         uses: actions/configure-pages@v5
-
       - name: Upload artifact
-        if: steps.filter.outputs.code == 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           # Upload entire repository
           path: '.'
-
       - name: Deploy to GitHub Pages
-        if: steps.filter.outputs.code == 'true'
         id: deployment
         uses: actions/deploy-pages@v4
